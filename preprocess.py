@@ -91,13 +91,30 @@ if __name__ == "__main__":
 	label2idx = {'B-LOC': 4, 'B-MISC': 2, 'B-ORG': 3, 'B-PER': 1, 'I-LOC': 8, 'I-MISC': 6, 'I-ORG': 7, 'I-PER': 5,
 				 'L-LOC': 12, 'L-MISC': 10, 'L-ORG': 11, 'L-PER': 9, 'O': 0, 'U-LOC': 16, 'U-MISC': 14, 'U-ORG': 15, 'U-PER': 13}
 	
+	
+	def get_char2idx(dataset):
+		temp = []
+		for sentence in dataset:
+			for word in sentence:
+				temp.append(word[0])
+		temp = set(''.join(temp))
+		return {k:v for v,k in enumerate(temp)}
+	
+	char2idx = {}
+ 
+	for dataset in [train,test,valid]:
+		char2idx.update(get_char2idx(train))
+
+	print(char2idx,len(char2idx))
+
 	def prepare(dataset):
 		for i,sentence in enumerate(dataset):
 			dataset[i] = prepare_sent(sentence, word2idx, label2idx, MAX_SENT_LEN)
 		return dataset
 	
-	np.save("processed_data/train",prepare(train))
-	np.save("processed_data/test",prepare(test))
-	np.save("processed_data/valid",prepare(valid))
-	np.save("processed_data/word2idx",word2idx)
-	np.save("processed_data/tag2idx",label2idx)
+
+	# np.save("processed_data/train",prepare(train))
+	# np.save("processed_data/test",prepare(test))
+	# np.save("processed_data/valid",prepare(valid))
+	# np.save("processed_data/word2idx",word2idx)
+	# np.save("processed_data/tag2idx",label2idx)
